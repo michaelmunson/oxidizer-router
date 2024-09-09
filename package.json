@@ -1,0 +1,27 @@
+{
+  "name": "oxidizer-router",
+  "version": "1.0.0",
+  "description": "A router component & state management library for use with the oxidizer library",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "create-docs": "typedoc --out ./docs ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "www.google.com"
+  },
+  "keywords": [
+    "oxidizer",
+    "router"
+  ],
+  "author": "Michael S. Munson",
+  "license": "ISC",
+  "dependencies": {
+    "oxidizer": "^3.0.6"
+  },
+  "devDependencies": {
+    "typedoc": "^0.26.6",
+    "typescript": "^5.5.4"
+  }
+}
