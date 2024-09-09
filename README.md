@@ -10,7 +10,7 @@ npm install oxidizer-router
 
 ```typescript
 import { DIV } from "oxidizer";
-import {createRouter} from "./router";
+import {createRouter} from "oxidizer-router";
 
 const HomePage = () => {
     return (
