@@ -1,45 +1,14 @@
 import { createProps, createEffect, createComponent } from "oxidizer";
-
-type Route = `/${string}` | `/*` | `/%`;
-
-type Routes = {
-   [key: Route]: (
-      Routes | (() => HTMLElement)
-   )
-}
-
-class RouterError extends Error {
-   constructor(message:string){
-      super(message);
-      this.name = 'RouterError'
-   }
-}
-
-const getParamRoute = (routes:Routes) => {
-   const paramRoute = Object.entries(routes).filter(([k,v]) => k.startsWith('/:'))[0];
-   if (paramRoute){
-      return paramRoute;
-   } else {
-      return <const>['/:', null];
-   }
-};
-const getStarRoute = (routes:Routes) => {
-   const starRoute = Object.entries(routes).filter(([k,v]) => k.startsWith('/*'))[0];
-   return starRoute ? starRoute[1] : null;
-}
-const getIndexRoute = (routes:Routes) => {
-   const indexRoute = Object.entries(routes).filter(([k,v]) => k.startsWith('/%'))[0];
-   return indexRoute ? indexRoute[1] : null;
-}
-
+import { Route, RouterProps, Routes, Search, SearchRecord } from "./types";
+import { RouterError, getIndexRoute, getParamRoute, getStarRoute, Url, SearchParams } from "./utils";
 
 export function createRouter<T extends Routes>(routes: T) {
-   const props = createProps({
-      path: window.location.pathname
+   const props = createProps<RouterProps>({
+      path: window.location.pathname as Route,
    }, [
       createEffect('path', ({ path }) => {
          window.history.pushState('page', 'title', path);
-      })
+      }),
    ]);
 
    let routeParams:Record<string,string> = {};
@@ -100,14 +69,22 @@ export function createRouter<T extends Routes>(routes: T) {
       {
          router: props,
          getParams: () => routeParams,
-         navigate: (route: string) => {
-            if (route.startsWith('/')) {
-               props.path = route;
-            } else {
-               const currPath = (props.path.endsWith('/')) ? props.path.slice(0, -1) : props.path;
-               props.path = [currPath, route].join('/');
-            }
+         getSearch: () => SearchParams.stringToRecord(window.location.search),
+         getPathname: () => Url.getPathname(props.path),
+         setSearch: (search:SearchRecord|string) => {
+            const searchString = typeof search === "string" ? search : SearchParams.recordToString(search);
+            const url = Url.get(props.path);
+            url.search = searchString;
+            props.path = url.href.replace(url.origin, '') as Route;
          },
+         navigate: (route: Route, search?:SearchRecord) => {
+            const url = Url.get(route);
+            if (search){
+               url.search = SearchParams.recordToString(search);
+            }
+            props.path = url.href.replace(url.origin, '') as Route;
+         },
+         
       }
    ]
 }

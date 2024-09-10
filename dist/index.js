@@ -2,36 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRouter = createRouter;
 const oxidizer_1 = require("oxidizer");
-class RouterError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'RouterError';
-    }
-}
-const getParamRoute = (routes) => {
-    const paramRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/:'))[0];
-    if (paramRoute) {
-        return paramRoute;
-    }
-    else {
-        return ['/:', null];
-    }
-};
-const getStarRoute = (routes) => {
-    const starRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/*'))[0];
-    return starRoute ? starRoute[1] : null;
-};
-const getIndexRoute = (routes) => {
-    const indexRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/%'))[0];
-    return indexRoute ? indexRoute[1] : null;
-};
+const utils_1 = require("./utils");
 function createRouter(routes) {
     const props = (0, oxidizer_1.createProps)({
-        path: window.location.pathname
+        path: window.location.pathname,
     }, [
         (0, oxidizer_1.createEffect)('path', ({ path }) => {
             window.history.pushState('page', 'title', path);
-        })
+        }),
     ]);
     let routeParams = {};
     const walkRoute = (route) => {
@@ -46,13 +24,13 @@ function createRouter(routes) {
                 currRoutes = currRoutes[r];
             }
             else {
-                const [param, paramRoute] = getParamRoute(currRoutes);
+                const [param, paramRoute] = (0, utils_1.getParamRoute)(currRoutes);
                 if (paramRoute) {
                     currRoutes = paramRoute;
                     routeParams[param] = r;
                 }
                 else {
-                    const starRoute = getStarRoute(currRoutes);
+                    const starRoute = (0, utils_1.getStarRoute)(currRoutes);
                     if (starRoute) {
                         currRoutes = starRoute;
                     }
@@ -65,15 +43,15 @@ function createRouter(routes) {
         if (typeof currRoutes === "function")
             return currRoutes;
         else {
-            const indexRoute = getIndexRoute(currRoutes);
+            const indexRoute = (0, utils_1.getIndexRoute)(currRoutes);
             if (indexRoute) {
                 if (typeof indexRoute === "function")
                     return indexRoute;
                 else
-                    throw new RouterError('index route must be of type function');
+                    throw new utils_1.RouterError('index route must be of type function');
             }
             else {
-                throw new RouterError(`No routes matched current route "${route}". Consider adding a dynamic (/:), star (/*) or index (/%) route.`);
+                throw new utils_1.RouterError(`No routes matched current route "${route}". Consider adding a dynamic (/:), star (/*) or index (/%) route.`);
             }
         }
     };
@@ -87,14 +65,20 @@ function createRouter(routes) {
         {
             router: props,
             getParams: () => routeParams,
-            navigate: (route) => {
-                if (route.startsWith('/')) {
-                    props.path = route;
+            getSearch: () => utils_1.SearchParams.stringToRecord(window.location.search),
+            getPathname: () => utils_1.Url.getPathname(props.path),
+            setSearch: (search) => {
+                const searchString = typeof search === "string" ? search : utils_1.SearchParams.recordToString(search);
+                const url = utils_1.Url.get(props.path);
+                url.search = searchString;
+                props.path = url.href.replace(url.origin, '');
+            },
+            navigate: (route, search) => {
+                const url = utils_1.Url.get(route);
+                if (search) {
+                    url.search = utils_1.SearchParams.recordToString(search);
                 }
-                else {
-                    const currPath = (props.path.endsWith('/')) ? props.path.slice(0, -1) : props.path;
-                    props.path = [currPath, route].join('/');
-                }
+                props.path = url.href.replace(url.origin, '');
             },
         }
     ];
