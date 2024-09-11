@@ -4,6 +4,7 @@ exports.RouterError = exports.Url = exports.SearchParams = exports.getIndexRoute
 const getParamRoute = (routes) => {
     const paramRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/:'))[0];
     if (paramRoute) {
+        paramRoute[0] = paramRoute[0].replace('/:', '');
         return paramRoute;
     }
     else {

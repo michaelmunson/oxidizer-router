@@ -3,6 +3,7 @@ import { Route, Routes, SearchRecord } from "./types";
 export const getParamRoute = (routes: Routes) => {
     const paramRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/:'))[0];
     if (paramRoute) {
+        paramRoute[0] = paramRoute[0].replace('/:','');
         return paramRoute;
     } else {
         return <const>['/:', null];
