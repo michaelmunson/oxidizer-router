@@ -1,7 +1,7 @@
 import { Route, Routes, SearchRecord } from "./types";
-export declare const getParamRoute: (routes: Routes) => [string, Routes | (() => HTMLElement)] | readonly ["/:", null];
-export declare const getStarRoute: (routes: Routes) => Routes | (() => HTMLElement) | null;
-export declare const getIndexRoute: (routes: Routes) => Routes | (() => HTMLElement) | null;
+export declare const getParamRoute: (routes: Routes) => [string, Routes | (() => HTMLElement) | undefined] | readonly ["/:", null];
+export declare const getStarRoute: (routes: Routes) => Routes | (() => HTMLElement) | null | undefined;
+export declare const getIndexRoute: (routes: Routes) => Routes | (() => HTMLElement) | null | undefined;
 export declare const SearchParams: {
     stringToRecord: (searchString: string) => {
         [k: string]: string;

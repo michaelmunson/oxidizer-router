@@ -19,6 +19,9 @@ const walkRoute = (routes, route) => {
     if (routeArr.length === 0)
         routeArr.push('/');
     for (const i in routeArr) {
+        if (!currRoutes) {
+            throw new utils_1.RouterError('Router object must not be null or undefined');
+        }
         const r = routeArr[i];
         if (r in currRoutes || `${r}/` in currRoutes) {
             currRoutes = currRoutes[r];
@@ -42,6 +45,8 @@ const walkRoute = (routes, route) => {
     }
     if (typeof currRoutes === "function")
         return currRoutes;
+    else if (!currRoutes)
+        throw new utils_1.RouterError('Router object must not be null or undefined');
     else {
         const indexRoute = (0, utils_1.getIndexRoute)(currRoutes);
         if (indexRoute) {

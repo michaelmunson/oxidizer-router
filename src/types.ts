@@ -11,7 +11,7 @@ export type Route = (
 
 
 export type Routes = {
-   [K in Route]: (
+   [K in Route]?: (
       Routes | (() => HTMLElement)
    )
 }

@@ -8,7 +8,7 @@ export type Route = (
 /**@description parameter route */
 `:`);
 export type Routes = {
-    [K in Route]: (Routes | (() => HTMLElement));
+    [K in Route]?: (Routes | (() => HTMLElement));
 };
 export type Search = `?${string}`;
 export type SearchRecord = Record<string, string>;
