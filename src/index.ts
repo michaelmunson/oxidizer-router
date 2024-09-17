@@ -88,7 +88,7 @@ export const setHash = (hash:string) => {
 }
 
 
-export const navigate = (route: Route, {hash, search}:{search?: SearchRecord | string, hash?: string}={}) => {
+export const navigate = (route: string, {hash, search}:{search?: SearchRecord | string, hash?: string}={}) => {
     if (!route.startsWith('/')){
         route = props.path + '/' + route as Route;
     }
