@@ -9,7 +9,7 @@ const routePrefixes = {
 export const getParamRoute = (routes: Routes) => {
     const paramRoute = Object.entries(routes).filter(([k, v]) => k.startsWith(routePrefixes.parameter))[0];
     if (paramRoute) {
-        paramRoute[0] = paramRoute[0].replaceAll(':','');
+        paramRoute[0] = paramRoute[0].replaceAll(':','').replace('/','');
         return paramRoute;
     } else {
         return <const>['/:', null];
