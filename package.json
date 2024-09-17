@@ -1,11 +1,12 @@
 {
   "name": "oxidizer-router",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "A router component & state management library for use with the oxidizer library",
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "create-docs": "typedoc --out ./docs ./src/index.ts"
+    "create-docs": "typedoc --out ./docs ./src/index.ts",
+    "deploy": "npm run build && npm run create-docs && npm publish"
   },
   "repository": {
     "type": "git",

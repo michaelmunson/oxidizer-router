@@ -1,10 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RouterError = exports.Url = exports.SearchParams = exports.getIndexRoute = exports.getStarRoute = exports.getParamRoute = void 0;
+const routePrefixes = {
+    star: '*',
+    index: 'index',
+    parameter: ':'
+};
 const getParamRoute = (routes) => {
-    const paramRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/:'))[0];
+    const paramRoute = Object.entries(routes).filter(([k, v]) => k.startsWith(routePrefixes.parameter))[0];
     if (paramRoute) {
-        paramRoute[0] = paramRoute[0].replace('/:', '');
+        paramRoute[0] = paramRoute[0].replaceAll(':', '');
         return paramRoute;
     }
     else {
@@ -13,12 +18,12 @@ const getParamRoute = (routes) => {
 };
 exports.getParamRoute = getParamRoute;
 const getStarRoute = (routes) => {
-    const starRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/*'))[0];
+    const starRoute = Object.entries(routes).filter(([k, v]) => k.startsWith(routePrefixes.star))[0];
     return starRoute ? starRoute[1] : null;
 };
 exports.getStarRoute = getStarRoute;
 const getIndexRoute = (routes) => {
-    const indexRoute = Object.entries(routes).filter(([k, v]) => k.startsWith('/%'))[0];
+    const indexRoute = Object.entries(routes).filter(([k, v]) => k.startsWith(routePrefixes.index))[0];
     return indexRoute ? indexRoute[1] : null;
 };
 exports.getIndexRoute = getIndexRoute;

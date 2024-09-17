@@ -1,6 +1,17 @@
-export type Route = `/${string}` | `/*` | `/%`;
+export type Route = (
+   /**@description basic route */
+   `/${string}` | 
+   /**@description catch all route */
+   `*` | 
+   /**@description index route */
+   `index` |
+   /**@description parameter route */
+   `:`
+);
+
+
 export type Routes = {
-   [key: Route]: (
+   [K in Route]: (
       Routes | (() => HTMLElement)
    )
 }
