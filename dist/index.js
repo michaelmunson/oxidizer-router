@@ -30,7 +30,7 @@ const walkRoute = (routes, route) => {
             const [param, paramRoute] = (0, utils_1.getParamRoute)(currRoutes);
             if (paramRoute) {
                 currRoutes = paramRoute;
-                routeParams[param] = r;
+                routeParams[param] = r.replace('/', '');
             }
             else {
                 const starRoute = (0, utils_1.getStarRoute)(currRoutes);
