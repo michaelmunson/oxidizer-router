@@ -7,7 +7,11 @@ const props = createProps<RouterProps>({
     path: window.location.pathname as Route,
 }, [
     createEffect('path', ({ path }) => {
-        window.history.pushState('page', 'title', path);
+        try {
+            window.history.pushState('page', 'title', path);
+        } catch (e) {
+            throw new RouterError(`Failed to navigate path "${path}"`)
+        }
     }),
 ]);
 
@@ -15,6 +19,8 @@ const props = createProps<RouterProps>({
 let routeParams: Record<string, string> = {};
 
 const walkRoute = (routes: Routes, route: string) => {
+    route = Url.getPathname(route);
+
     routeParams = {};
 
     const routeArr: Route[] = route.split('/').filter(x => x).map(r => `/${r}` as Route);
@@ -75,11 +81,14 @@ export const setSearch = (search: SearchRecord | string) => {
     props.path = url.href.replace(url.origin, '') as Route;
 }
 export const navigate = (route: Route, search?: SearchRecord) => {
+    if (!route.startsWith('/')){
+        route = props.path + '/' + route as Route;
+    }
     const url = Url.get(route);
     if (search) {
         url.search = SearchParams.recordToString(search);
     }
-    props.path = url.href.replace(url.origin, '') as Route;
+    props.path = url.pathname.replace(url.origin, '') as Route;
 }
 
 export default function Router<T extends Routes>(routes: T) {

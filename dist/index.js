@@ -8,11 +8,17 @@ const props = (0, oxidizer_1.createProps)({
     path: window.location.pathname,
 }, [
     (0, oxidizer_1.createEffect)('path', ({ path }) => {
-        window.history.pushState('page', 'title', path);
+        try {
+            window.history.pushState('page', 'title', path);
+        }
+        catch (e) {
+            throw new utils_1.RouterError(`Failed to navigate path "${path}"`);
+        }
     }),
 ]);
 let routeParams = {};
 const walkRoute = (routes, route) => {
+    route = utils_1.Url.getPathname(route);
     routeParams = {};
     const routeArr = route.split('/').filter(x => x).map(r => `/${r}`);
     let currRoutes = routes;
@@ -76,11 +82,14 @@ const setSearch = (search) => {
 };
 exports.setSearch = setSearch;
 const navigate = (route, search) => {
+    if (!route.startsWith('/')) {
+        route = props.path + '/' + route;
+    }
     const url = utils_1.Url.get(route);
     if (search) {
         url.search = utils_1.SearchParams.recordToString(search);
     }
-    props.path = url.href.replace(url.origin, '');
+    props.path = url.pathname.replace(url.origin, '');
 };
 exports.navigate = navigate;
 function Router(routes) {
