@@ -49,6 +49,9 @@ exports.Url = {
     getSubUrl(suburl) {
         const url = this.get(suburl);
         return url.href.replace(url.origin, '');
+    },
+    removeOrigin(url) {
+        return url.href.replace(url.origin, '');
     }
 };
 class RouterError extends Error {

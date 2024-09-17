@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.navigate = exports.setSearch = exports.getPathname = exports.getSearch = exports.getParams = void 0;
+exports.navigate = exports.setHash = exports.setSearch = exports.getPathname = exports.getHash = exports.getSearch = exports.getParams = void 0;
 exports.default = Router;
 const oxidizer_1 = require("oxidizer");
 const utils_1 = require("./utils");
@@ -72,24 +72,35 @@ const getParams = () => routeParams;
 exports.getParams = getParams;
 const getSearch = () => utils_1.SearchParams.stringToRecord(window.location.search);
 exports.getSearch = getSearch;
+const getHash = () => window.location.hash.replace('#', '');
+exports.getHash = getHash;
 const getPathname = () => utils_1.Url.getPathname(props.path);
 exports.getPathname = getPathname;
 const setSearch = (search) => {
     const searchString = typeof search === "string" ? search : utils_1.SearchParams.recordToString(search);
     const url = utils_1.Url.get(props.path);
     url.search = searchString;
-    props.path = url.href.replace(url.origin, '');
+    props.path = utils_1.Url.removeOrigin(url);
 };
 exports.setSearch = setSearch;
-const navigate = (route, search) => {
+const setHash = (hash) => {
+    const url = utils_1.Url.get(props.path);
+    url.hash = hash;
+    props.path = utils_1.Url.removeOrigin(url);
+};
+exports.setHash = setHash;
+const navigate = (route, { hash, search } = {}) => {
     if (!route.startsWith('/')) {
         route = props.path + '/' + route;
     }
     const url = utils_1.Url.get(route);
     if (search) {
-        url.search = utils_1.SearchParams.recordToString(search);
+        url.search = typeof search === "string" ? search : utils_1.SearchParams.recordToString(search);
     }
-    props.path = url.pathname.replace(url.origin, '');
+    if (hash) {
+        url.hash = hash;
+    }
+    props.path = utils_1.Url.removeOrigin(url);
 };
 exports.navigate = navigate;
 function Router(routes) {

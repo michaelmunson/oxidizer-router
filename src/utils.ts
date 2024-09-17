@@ -47,6 +47,9 @@ export const Url = {
     getSubUrl(suburl:string){
         const url = this.get(suburl);
         return url.href.replace(url.origin, '') as Route;
+    },
+    removeOrigin(url:URL){
+        return url.href.replace(url.origin, '') as Route;
     }
 }
 

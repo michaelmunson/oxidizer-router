@@ -73,22 +73,33 @@ const RouterComponent = createComponent(
 
 export const getParams = () => routeParams;
 export const getSearch = () => SearchParams.stringToRecord(window.location.search);
+export const getHash = () => window.location.hash.replace('#','');
 export const getPathname = () => Url.getPathname(props.path);
 export const setSearch = (search: SearchRecord | string) => {
     const searchString = typeof search === "string" ? search : SearchParams.recordToString(search);
     const url = Url.get(props.path);
     url.search = searchString;
-    props.path = url.href.replace(url.origin, '') as Route;
+    props.path = Url.removeOrigin(url);
 }
-export const navigate = (route: Route, search?: SearchRecord) => {
+export const setHash = (hash:string) => {
+    const url = Url.get(props.path);
+    url.hash = hash;
+    props.path = Url.removeOrigin(url);
+}
+
+
+export const navigate = (route: Route, {hash, search}:{search?: SearchRecord | string, hash?: string}={}) => {
     if (!route.startsWith('/')){
         route = props.path + '/' + route as Route;
     }
     const url = Url.get(route);
     if (search) {
-        url.search = SearchParams.recordToString(search);
+        url.search = typeof search === "string" ? search : SearchParams.recordToString(search);
     }
-    props.path = url.pathname.replace(url.origin, '') as Route;
+    if (hash) {
+        url.hash = hash;
+    }
+    props.path = Url.removeOrigin(url);
 }
 
 export default function Router<T extends Routes>(routes: T) {

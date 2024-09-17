@@ -13,6 +13,7 @@ export declare const Url: {
     get(suburl: string): URL;
     getPathname(suburl: string): string;
     getSubUrl(suburl: string): Route;
+    removeOrigin(url: URL): Route;
 };
 export declare class RouterError extends Error {
     constructor(message: string);
