@@ -1,7 +1,6 @@
 import { createProps, createEffect, createComponent, DIV } from "oxidizer";
-import { Route, RouterProps, Routes, Search, SearchRecord } from "./types";
 import { RouterError, getIndexRoute, getParamRoute, getStarRoute, Url, SearchParams } from "./utils";
-
+import { Route, RouterProps, Routes, SearchRecord } from "./types";
 
 const props = createProps<RouterProps>({
     path: window.location.pathname as Route,
@@ -71,6 +70,11 @@ const RouterComponent = createComponent(
     class extends HTMLElement { }
 );
 
+export {
+    type Route,
+    type Routes
+}
+
 export const getParams = () => routeParams;
 export const getSearch = () => SearchParams.stringToRecord(window.location.search);
 export const getHash = () => window.location.hash.replace('#','');
@@ -86,7 +90,6 @@ export const setHash = (hash:string) => {
     url.hash = hash;
     props.path = Url.removeOrigin(url);
 }
-
 
 export const navigate = (route: string, {hash, search}:{search?: SearchRecord | string, hash?: string}={}) => {
     if (!route.startsWith('/')){

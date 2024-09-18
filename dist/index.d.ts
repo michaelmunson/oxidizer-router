@@ -1,4 +1,5 @@
-import { Routes, SearchRecord } from "./types";
+import { Route, Routes, SearchRecord } from "./types";
+export { type Route, type Routes };
 export declare const getParams: () => Record<string, string>;
 export declare const getSearch: () => {
     [k: string]: string;

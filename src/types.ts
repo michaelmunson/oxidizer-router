@@ -9,15 +9,15 @@ export type Route = (
    `:`
 );
 
-
 export type Routes = {
    [K in Route]?: (
       Routes | (() => HTMLElement)
    )
 }
+
 export type Search = `?${string}`
 export type SearchRecord = Record<string,string>
 
 export type RouterProps = {
-    path: Route
+   path: Route
 }
