@@ -135,7 +135,7 @@ navigate('/pages/one', {search: {name:"John"}, hash:"example"})
 
 import { H1, MAIN } from "oxidizer";
 
-export default function () {
+export default function HomePage () {
   return (
     MAIN(
       H1('Hello World')

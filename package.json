@@ -1,6 +1,6 @@
 {
   "name": "oxidizer-router",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A router component & state management library for use with the oxidizer library",
   "main": "dist/index.js",
   "type": "module",
